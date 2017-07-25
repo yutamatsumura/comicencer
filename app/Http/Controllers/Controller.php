@@ -15,11 +15,15 @@ abstract class Controller extends BaseController
         $count_reviews = $user->reviews()->count();
         $count_followings = $user->followings()->count();
         $count_followers = $user->followers()->count();
+        $count_want = $user->want_items()->count();
+        $count_read = $user->read_items()->count();
         
         return [
             'count_reviews' => $count_reviews,
             'count_followings' => $count_followings,
             'count_followers' => $count_followers,
+            'count_want' => $count_want,
+            'count_read' => $count_read,
         ];
     }
 }
