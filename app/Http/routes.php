@@ -22,14 +22,11 @@ Route::get('login', 'Auth\AuthController@getLogin')->name('login.get');
 Route::post('login', 'Auth\AuthController@postLogin')->name('login.post');
 Route::get('logout', 'Auth\AuthController@getLogout')->name('logout.get');
 
-Route::group(['middleware' => 'auth'], function () {
-    Route::resource('items', 'ItemsController', ['only' => ['create']]);
-});
-
 // ランキング
 Route::get('ranking/want', 'RankingController@want')->name('ranking.want');
 Route::get('ranking/read', 'RankingController@read')->name('ranking.read');
 
+//ユーザー認証
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('items', 'ItemsController', ['only' => ['create', 'show']]);
     Route::post('want', 'ItemUserController@want')->name('item_user.want');
@@ -38,17 +35,20 @@ Route::group(['middleware' => 'auth'], function () {
     
     Route::post('read', 'ItemUserController@read')->name('item_user.read');
     Route::delete('read', 'ItemUserController@dont_read')->name('item_user.dont_read');
-});
-
-//フォロー
-Route::group(['middleware' => 'auth'], function () {
+    
+    //フォロー
     Route::resource('users', 'UsersController', ['only' => ['index', 'show']]);
     Route::group(['prefix' => 'users/{id}'], function () { 
         Route::post('follow', 'UserFollowController@store')->name('user.follow');
         Route::delete('unfollow', 'UserFollowController@destroy')->name('user.unfollow');
         Route::get('followings', 'UsersController@followings')->name('users.followings');
         Route::get('followers', 'UsersController@followers')->name('users.followers');
+        Route::get('itemlists', 'UsersController@itemlists')->name('users.itemlists');
     });
     
-    Route::resource('microposts', 'MicropostsController', ['only' => ['store', 'destroy']]);
+    Route::resource('users', 'UsersController', ['only' => ['index', 'show']]);
+    
+    Route::post('reviews/{id}', 'ReviewsController@store')->name('reviews.store');
+    //Route::resource('reviews', 'reviewsController', ['only' => 'destroy']);
+    Route::delete('reviews/{id}', 'ReviewsController@destroy')->name('reviews.destroy');
 });

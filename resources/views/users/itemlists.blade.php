@@ -17,14 +17,24 @@
                 <li role="presentation" class="{{ Request::is('users/*/followings') ? 'active' : '' }}"><a href="{{ route('users.followings', ['id' => $user->id]) }}">Followings <span class="badge">{{ $count_followings }}</span></a></li>
                 <li role="presentation" class="{{ Request::is('users/*/followers') ? 'active' : '' }}"><a href="{{ route('users.followers', ['id' => $user->id]) }}">Followers <span class="badge">{{ $count_followers }}</span></a></li>
             </ul>
-                
-        <div class="row">
-            <div class="col-xs-12">
-                @if (count($reviews) > 0)
-                    @include('reviews.reviews', ['reviews' => $reviews])
-                @endif
+            <div class="status text-center">
+                <ul>
+                    <li>
+                        <div class="status-label">WANT</div>
+                        <div id="want_count" class="status-value">
+                            {{ $count_want }}
+                        </div>
+                    </li>
+                    <li>
+                        <div class="status-label">READ</div>
+                        <div id="read_count" class="status-value">
+                            {{ $count_read }}
+                        </div>
+                    </li>
+                </ul>
+                @include('items.items', ['items' => $items])
+                {!! $items->render() !!}
             </div>
         </div>
-
     </div>
 @endsection

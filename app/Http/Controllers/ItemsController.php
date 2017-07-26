@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Item;
+use App\Review;
 
 class ItemsController extends Controller
 {
@@ -49,10 +50,13 @@ class ItemsController extends Controller
       $want_users = $item->want_users;
       $read_users = $item->read_users;
 
+      $reviews = Review::where('item_id', $id)->orderBy('created_at', 'desc')->paginate(10);
+      
       return view('items.show', [
           'item' => $item,
           'want_users' => $want_users,
           'read_users' => $read_users,
+          'reviews' => $reviews,
       ]);
     }
 }

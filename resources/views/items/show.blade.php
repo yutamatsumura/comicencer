@@ -16,6 +16,9 @@
                                 @include('items.read_button', ['item' => $item])
                             @endif
                         </div>
+                        <div>
+                            <p class="text-center"><a href="{{ $item->url }}" target="_blank">楽天詳細ページへ</a></p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -46,7 +49,24 @@
                     </div>
                 </div>
             </div>
-            <p class="text-center"><a href="{{ $item->url }}" target="_blank">楽天詳細ページへ</a></p>
+            
+            
+            {!! Form::open(['route' => ['reviews.store', $item->id]]) !!}
+                <div class="form-group">
+                    {!! Form::textarea('content', old('content'), ['class' => 'form-control', 'rows' => '5']) !!}
+                </div>
+                {!! Form::submit('Review', ['class' => 'btn btn-primary btn-block']) !!}
+            {!! Form::close() !!}
+            
+        </div>
+        
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-xs-12 col-md-offset-3">
+            <p>ユーザーレビュー　：　{{ count($reviews) }}　件　</p> 
+            @if (count($reviews) > 0)
+                @include('reviews.reviews', ['reviews' => $reviews])
+            @endif
         </div>
     </div>
 @endsection

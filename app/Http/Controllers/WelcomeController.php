@@ -18,9 +18,21 @@ class WelcomeController extends Controller
      */
     public function index()
     {
-        $items = Item::orderBy('updated_at', 'desc')->paginate(20);
-        return view('welcome', [
-            'items' => $items,
-        ]);
+        
+        $data = [];
+        if (\Auth::check()) {
+            $user = \Auth::user();
+            $reviews = $user->feed_reviews()->orderBy('created_at', 'desc')->paginate(10);
+            $items = Item::orderBy('updated_at', 'desc')->paginate(20);
+
+            $data = [
+                'user' => $user,
+                'reviews' => $reviews,
+                'items' => $items,
+            ];
+        }
+        
+        
+        return view('welcome',$data);
     }
 }

@@ -20,21 +20,22 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        $user = User::find($id);
-        $items = [];
-        if (Item::exists()) {
-            $items = \DB::table('items')->join('item_user', 'items.id', '=', 'item_user.item_id')->select('items.*')->where('item_user.user_id', $user->id)->distinct()->groupBy('items.id')->paginate(20);
-        }
+        $data = [];
+        if (\Auth::check()) {
+            $user = User::find($id);
+            $reviews = $user->reviews()->orderBy('created_at', 'desc')->paginate(10);
+            $items = Item::orderBy('updated_at', 'desc')->paginate(20);
 
-        $data = [
-            'user' => $user,
-            'items' => $items,
-        ];
-        
+            $data = [
+                'user' => $user,
+                'reviews' => $reviews,
+                'items' => $items,
+            ];
+            
+        }
         $data += $this->counts($user);
         
         return view('users.show', $data);
-        
     }
     
     public function followings($id)
@@ -65,5 +66,24 @@ class UsersController extends Controller
         $data += $this->counts($user);
         
         return view('users.followers', $data);
+    }
+    
+    public function itemlists($id)
+    {
+        $user = User::find($id);
+        $items = [];
+        if (Item::exists()) {
+            $items = \DB::table('items')->join('item_user', 'items.id', '=', 'item_user.item_id')->select('items.*')->where('item_user.user_id', $user->id)->distinct()->groupBy('items.id')->paginate(20);
+        }
+
+        $data = [
+            'user' => $user,
+            'items' => $items,
+        ];
+        
+        $data += $this->counts($user);
+        
+        return view('users.itemlists', $data);
+        
     }
 }
